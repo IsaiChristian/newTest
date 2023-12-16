@@ -37,7 +37,7 @@ app.post('/pokemon/create/:pokeName', async (req, res) => {
         res.status(500).json({ error: 'Algo salio mal ' + error });
     }
 });
-//curl -X GET http://localhost:3000/pokemon/{NOMBRE}
+// curl -X GET http://localhost:3000/pokemon/{NOMBRE}
 app.get('/pokemon/:pokeName', async (req, res) => {
     const { pokeName } = req.params;
     let pokemon = await prisma.pokemon.findUnique({
@@ -73,12 +73,12 @@ app.get('/pokemon/:pokeName', async (req, res) => {
 
 })
 
-//curl -X POST -H "Content-Type: application/json" -d '{"type":"programmer"}' http://localhost:3000/pokemon/create/{NOMBRE}
+// curl -X PUT -H "Content-Type: application/json" -d '{"name":"nuevoNombre","data":"{'type':'programmer'}"}' http://localhost:3000/pokemon/update/{viejoonombre}
 app.put('/pokemon/update/:pokeName', async (req, res) => {
     try {
         const { pokeName } = req.params;
         const { updatedDetails } = req.body; // Object containing updated details
-        console.log(updatedDetails);
+
         // Find the Pokémon by name
         let pokemon = await prisma.pokemon.findUnique({
             where: {
@@ -92,25 +92,31 @@ app.put('/pokemon/update/:pokeName', async (req, res) => {
 
 
         console.log("resquest es : ", req.body)
+
         const newDetails = JSON.stringify(req.body)
 
-        console.log(newDetails);
+        console.log("nuevos ", newDetails);
+
         pokemon = await prisma.pokemon.update({
             where: {
                 name: pokeName,
             },
-            data: {
-                name: req.params.pokeName,
-                data: newDetails
-            }, // Update with the provided details
+            data:
+            {
+                name: req.body["name"],
+                data: req.body["data"],
+            }
+
+
+            , // Update with the provided details
         });
         console.log(pokemon.name);
-        res.status(200).json({ message: 'Pokemon actualizado', updatedPokemon: pokemon });
+        res.status(200).json({ message: 'Pokemon actualizado', updatedPokemon: pokemon.name });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error ' + error });
     }
 });
-//curl -X DELETE http://localhost:3000/pokemon/delete/{NOMBRE}
+// curl -X DELETE http://localhost:3000/pokemon/delete/nuevopoke
 app.delete('/pokemon/delete/:pokeName', async (req, res) => {
 
     try {
