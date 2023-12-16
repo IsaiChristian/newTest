@@ -142,5 +142,5 @@ app.delete('/pokemon/delete/:pokeName', async (req, res) => {
 
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`PokeServer listening on port ${port}`)
 })
